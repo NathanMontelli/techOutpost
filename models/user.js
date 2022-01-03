@@ -11,6 +11,6 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false
   }
-})
+}, { sequelize, modelName: 'user' })
 
 module.exports = User
