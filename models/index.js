@@ -12,4 +12,4 @@ Post.hasMany(Note, { foreignKey: 'pid' })
 Note.belongsTo(Post, { foreignKey: 'pid' })
 
 
-module.exports = { User, Post, Note}
+module.exports = { User, Post, Note }
