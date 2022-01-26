@@ -1,13 +1,23 @@
 const router = require('express').Router()
-const { Note } = require('../models')
+const { Post, User, Note } = require('../models')
+const passport = require('passport')
 
-router.get('/notes', async function (req, res) {
-  const notes = await Note.findAll()
+// router.get('/notes', async function (req, res) {
+//   const notes = await Note.findAll()
+//   res.json(notes)
+// })
+// GET all comments
+router.get('/notes', passport.authenticate('jwt'), async function (req, res) {
+  const notes = await Note.findAll({ include: [User, Post] })
   res.json(notes)
 })
 
-router.post('/notes', async function ({ body }, res) {
-  const note = await Note.create(body)
+router.post('/notes', passport.authenticate('jwt'), async function (req, res) {
+  const note = await Note.create({
+    body: req.body.body,
+    uid: req.user.id,
+    pid: req.body.pid
+  })
   res.json(note)
 })
 
