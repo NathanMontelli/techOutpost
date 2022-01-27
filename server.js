@@ -37,7 +37,7 @@ app.use(require('./routes'))
 
 async function init() {
   await require('./db').sync()
-  app.listen(process.env.PORT || 3000)
+  app.listen(3000)
 }
 
 init()
