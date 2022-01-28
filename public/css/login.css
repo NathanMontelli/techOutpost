@@ -3065,8 +3065,8 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #007bff;
-  border-color: #007bff;
+  color: black;
+  border-color: black;
 }
 
 .btn-outline-primary:hover {
@@ -11455,8 +11455,12 @@ h1, h2, h3, h4, h5,
   background: #fbceb5 !important;
 }
 
+.ftco-section2 {
+  padding: 15.2em 0;
+}
+
 .ftco-section {
-  padding: 7em 0;
+  padding: 10.5em 0;
 }
 
 .ftco-no-pt {
@@ -11552,12 +11556,16 @@ h1, h2, h3, h4, h5,
   color: white !important;
   border: 1px solid transparent;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 40px;
+  /* border-radius: 40px; */
   padding-left: 20px;
   padding-right: 20px;
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+  -ms-border-radius: 40px;
+  -o-border-radius: 40px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -11677,7 +11685,7 @@ textarea.form-control {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   font-size: 15px;
-  
+
 }
 
 .btn:hover, .btn:active, .btn:focus {
@@ -11714,4 +11722,9 @@ textarea.form-control {
   bottom: 0;
   min-width: 100%;
   min-height: 100%;
+}
+
+.bg2 {
+  background-color: aqua !important;
+  color: #000;
 }

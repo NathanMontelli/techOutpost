@@ -8,12 +8,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="./css/home.css">
+  <link rel="stylesheet" href="./css/login.css">
 
   <title>Document</title>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light bg2">
     <div class="container-fluid">
       <a class="navbar-brand" href="/index.html">Tech Outpost</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -30,6 +31,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/login.html">Login</a>
+          <li class="nav-item">
+            <a class="nav-link active" href="/profile.html">Profile</a>
+          </li>
           </li>
         </ul>
         <button id="logout" class="btn btn-outline-primary" type="submit">Logout</button>
@@ -41,7 +45,7 @@
       <h1 class="display-4">Tech OutPost</h1>
       <p class="lead"></p>
       <hr class="my-4">
-      <p class="lead">Welcome Back <span id="username">johndoe</span>!</p>
+      <p class="lead">Welcome Back <span id="username">Nathan</span>!</p>
     </div>
     <div class="row">
       <form>
@@ -56,101 +60,123 @@
         <button id="post" type="submit" class="btn btn-primary">Create Post</button>
       </form>
     </div>
-    <div id="posts" class="row"></div>
+    <div id="posts" class="row">
+
+      <!-- <div class="container">
+        <div class="mb-3">
+          <label for="body" class="form-label">Comments</label>
+          <textarea class="form-control" name="body" id="commentBox" cols="30" rows="5"></textarea>
+        </div>
+        <button id="submitComment" type="button" class="btn btn-dark btn-lg btn-block" data-target="#exampleModal">
+          Submit Comment
+        </button>
+        <div class="description-title">Comments</div>
+        <hr>
+        <div id="notes" class="row"></div>
+      </div> -->
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
   <script>
-
-    async function logoutUser() {
-      localStorage.removeItem('username')
-      localStorage.removeItem('token')
-      location = '/login.html'
+  function createPost() {
+    let newPost = {
+      title: document.getElementById('title').value,
+      body: document.getElementById('body').value
     }
-
-    async function getPosts() {
-      try {
-        const { data: posts } = await axios.get('/api/posts', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-        return posts
-
-      } catch (err) {
-        location = '/login.html'
+    axios.post('/api/posts', newPost, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
-    }
+    })
+      .then(res => {
+        console.log(res)
+      })
+  }
 
-    async function createPost(data) {
-      const { data: post } = await axios.post('/api/posts', data, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+  document.getElementById("post").addEventListener('click', event => {
+    event.preventDefault()
+    createPost()
+    location.reload()
+  })
+
+  axios.get('/api/posts', {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+    .then(res => {
+
+      console.log(res.data)
+      let posts = res.data
+      posts.forEach(post => {
+        let postElem = document.createElement('div')
+        postElem.classList.add("col-sm-4")
+        postElem.innerHTML = `
+            <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title data-postid="${post.id}">${post.title}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Posted by ${post.User.username} at ${post.User.createdAt.slice(0, -14)}</h6>
+              <p class="card-text">${post.body}</p>
+              <hr>
+              <a href="/post.html" class="btn btn-dark btn-lg goToPost bg2 " data-postid="${post.id}" tabindex="-1" role="button">Go To Comment</a>
+            </div>
+          </div>
+          </div>
+          <br>
+            `
+        document.getElementById('posts').prepend(postElem)
+
       })
 
-      return post
-    }
-
-  
-
-    function renderPost() {
-      axios.get('/api/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
-        .then(res => {
-
-          console.log(res.data)
-          let posts = res.data.posts
-          let userInfo = res.data
-          posts.forEach(post => {
-            let postElem = document.createElement('div')
-            postElem.innerHTML = `
-             <div class="row bg-light p-5 rounded-md mb-2 mt-2">
-             <h3>${post.title}</h3>
-             <p class="lead"><i>posted by ${userInfo.username}</i></p>
-             <p class="lead">${post.body}</p>
-             <hr class="my-4">
-           </div>
-         `
-            document.getElementById('posts').prepend(postElem)
-
-          })
-        })
-    }
-
-    async function renderPosts() {
-      const posts = await getPosts()
-
-      posts.forEach(post => renderPost(post))
-    }
-
-    async function renderUsername() {
-      const username = localStorage.getItem('username')
-
-      document.getElementById('username').textContent = username
-    }
-
-    document.getElementById('post').addEventListener('click', async function (event) {
-      event.preventDefault()
-
-      const post = await createPost({
-        title: document.getElementById('title').value,
-        body: document.getElementById('body').value
-      })
-
-      renderPost({ ...post, User: { username: localStorage.getItem('username') } })
-      // setTimeout(location.reload.bind(location), 0);
     })
 
-    document.getElementById('logout').addEventListener('click', logoutUser)
+  document.addEventListener('click', event => {
+    if (event.target.classList.contains('goToPost')) {
+      console.log('ping')
+      localStorage.setItem('postId', event.target.dataset.postid)
+      location = '/post.html'
+    }
+  })
 
-    renderPosts()
-    renderUsername()
+  async function logoutUser() {
+    localStorage.removeItem('token')
+    location = '/login.html'
+  }
+
+  function timedOut() {
+    window.setTimeout(function () {
+      localStorage.removeItem('token')
+      // Move to a new location or you can do something else
+      location = "/login.html";
+    }, 300000);
+  }
+
+  document.getElementById("logout").addEventListener('click', event => {
+    event.preventDefault()
+    logoutUser()
+  })
+
+  timedOut()
+
+  if (localStorage.getItem('token') === null) {
+    location = '/login.html'
+
+  } else {
+
+  }
+
+  function timeOutUser() {
+      window.setTimeout(function () {
+        localStorage.removeItem('token')
+        // Move to a new location or you can do something else
+        location = "/login.html";
+      }, 250000);
+    }
+    timeOutUser()
+
   </script>
 </body>
 

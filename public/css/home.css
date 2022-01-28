@@ -7,6 +7,7 @@ body {
   position: relative;
   z-index: 0;
   padding: 0;
+  position: relative;
 }
 
 body:after {
@@ -19,4 +20,30 @@ body:after {
   background: #000;
   opacity: .3;
   z-index: -1;
+}
+
+.bg2 {
+  background-color: aqua !important;
+  color: #000;
+}
+
+.btn-outline-primary {
+  color: black;
+  border-color: black;
+}
+
+.btn2 {
+  color: black;
+  background-color: aqua#343a40;
+  border-color: aqua;
+}
+
+.btn2:hover {
+  color: #fff;
+  background-color: aqua;
+  border-color: aqua;
+}
+
+.userComments {
+  border-color: black;
 }
