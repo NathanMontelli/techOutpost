@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { Post, Note, User } = require('../models')
 const passport = require('passport')
-const { post } = require('.')
+
 
 // router.get('/posts', async function (req, res) {
 //   const posts = await Post.findAll()
